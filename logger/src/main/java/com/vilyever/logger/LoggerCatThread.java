@@ -1,6 +1,7 @@
 package com.vilyever.logger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
@@ -27,30 +28,36 @@ public class LoggerCatThread extends Thread {
     public void run() {
         super.run();
 
-        while (!isInterrupted()) {
-            try {
-                String[] command = new String[]{"logcat", "-v", "threadtime"};
+        BufferedReader bufferedReader = null;
+        try {
+            String[] command = new String[]{"logcat", "-v", "threadtime"};
 
-                Process process = Runtime.getRuntime().exec(command);
+            Process process = Runtime.getRuntime().exec(command);
 
-                BufferedReader bufferedReader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
+            bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
 
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.contains(processID)) {
-                        LoggerModel.getLoggerModels().add(new LoggerModel().setLogcatMessage(line));
-                        LoggerDisplay.notifyLogChanged();
-                    }
+            String line;
+            while (!isInterrupted() && (line = bufferedReader.readLine()) != null) {
+                if (line.contains(processID)) {
+                    LoggerModel.getLoggerModels().add(new LoggerModel().setLogcatMessage(line));
+                    LoggerDisplay.notifyLogChanged();
                 }
-
-                bufferedReader.close();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
             }
 
-            Thread.yield();
+        }
+        catch (Exception e) {
+//            e.printStackTrace();
+        }
+        finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                }
+                catch (IOException e) {
+//                    e.printStackTrace();
+                }
+            }
         }
     }
 
