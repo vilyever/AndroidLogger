@@ -49,6 +49,12 @@ public class LoggerDisplayView extends FrameLayout implements View.OnLayoutChang
                 else {
                     getLoggerRecyclerView().setVisibility(VISIBLE);
                 }
+                if (getBottomButton().getVisibility() == VISIBLE) {
+                    getBottomButton().setVisibility(GONE);
+                }
+                else {
+                    getBottomButton().setVisibility(VISIBLE);
+                }
             }
         });
 
@@ -139,6 +145,8 @@ public class LoggerDisplayView extends FrameLayout implements View.OnLayoutChang
         });
 
         addView(getBottomButton());
+
+        getBottomButton().setVisibility(GONE);
         getBottomButton().setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,6 +217,7 @@ public class LoggerDisplayView extends FrameLayout implements View.OnLayoutChang
             parent.removeView(this);
 
             getLoggerRecyclerView().setVisibility(GONE);
+            getBottomButton().setVisibility(GONE);
         }
     }
     
