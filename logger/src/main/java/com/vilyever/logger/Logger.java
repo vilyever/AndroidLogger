@@ -12,7 +12,7 @@ import android.util.Log;
 public class Logger {
     final Logger self = this;
 
-    private static final String DefaultTag = "Logger";
+    public static final String DefaultTag = "Logger";
 
     private static final int LogMaxLength = 2048;
 

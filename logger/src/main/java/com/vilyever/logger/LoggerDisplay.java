@@ -44,7 +44,7 @@ public class LoggerDisplay implements Application.ActivityLifecycleCallbacks {
     }
 
     public static void setDisplayLogTag(String tag) {
-        getInstance().getLoggerCatThread().setTag(tag);
+        getInstance().setDisplayTag(tag);
     }
     
     /* Properties */
@@ -57,7 +57,7 @@ public class LoggerDisplay implements Application.ActivityLifecycleCallbacks {
     protected LoggerDisplay setResumedActivity(Activity resumedActivity) {
         this.resumedActivity = resumedActivity;
 
-        if (this.resumedActivity != null && this.loggerCatThread == null) {
+        if (this.resumedActivity != null && !getLoggerCatThread().isAlive()) {
             getLoggerCatThread().start();
         }
         else {
@@ -83,8 +83,19 @@ public class LoggerDisplay implements Application.ActivityLifecycleCallbacks {
     protected LoggerCatThread getLoggerCatThread() {
         if (this.loggerCatThread == null) {
             this.loggerCatThread = new LoggerCatThread();
+            this.loggerCatThread.setTag(getDisplayTag());
         }
         return this.loggerCatThread;
+    }
+
+    private String displayTag;
+    public LoggerDisplay setDisplayTag(String displayTag) {
+        this.displayTag = displayTag;
+        getLoggerCatThread().setTag(this.displayTag);
+        return this;
+    }
+    public String getDisplayTag() {
+        return this.displayTag;
     }
 
     /* Overrides */

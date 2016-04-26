@@ -2,6 +2,7 @@ package com.vilyever.androidlogger;
 
 import android.app.Application;
 
+import com.vilyever.logger.Logger;
 import com.vilyever.logger.LoggerDisplay;
 
 /**
@@ -30,6 +31,7 @@ public class App extends Application {
         super.onCreate();
 
         LoggerDisplay.initialize(this);
+        LoggerDisplay.setDisplayLogTag(Logger.DefaultTag);
     }
 
     /* Delegates */
