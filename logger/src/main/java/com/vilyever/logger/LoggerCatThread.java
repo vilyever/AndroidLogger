@@ -33,8 +33,6 @@ public class LoggerCatThread extends Thread {
         return this.tag;
     }
 
-    int x = 0;
-    
     /* Overrides */
     @Override
     public void run() {
@@ -53,7 +51,8 @@ public class LoggerCatThread extends Thread {
             while (!isInterrupted() && (line = bufferedReader.readLine()) != null) {
                 if (line.contains(ProcessID)) {
                     LoggerModel model = new LoggerModel().setLogcatMessage(line);
-                    if (model.getTagWithContent().indexOf(getTag()) == 0) {
+                    int tagIndex = model.getTagWithContent().indexOf(getTag());
+                    if (tagIndex >=0 && tagIndex <= getTag().length()) {
                         LoggerModel.getLoggerModels().add(model);
                         LoggerDisplay.notifyLogChanged();
                     }
