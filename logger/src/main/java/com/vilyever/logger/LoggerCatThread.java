@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 public class LoggerCatThread extends Thread {
     final LoggerCatThread self = this;
 
-    private static final String processID = Integer.toString(android.os.Process.myPid());
+    private static final String ProcessID = Integer.toString(android.os.Process.myPid());
     
     /* Constructors */
 
@@ -21,7 +21,17 @@ public class LoggerCatThread extends Thread {
     
     
     /* Properties */
-    
+    private String tag;
+    public LoggerCatThread setTag(String tag) {
+        this.tag = tag;
+        return this;
+    }
+    public String getTag() {
+        if (this.tag == null) {
+            this.tag = "";
+        }
+        return this.tag;
+    }
     
     /* Overrides */
     @Override
@@ -39,9 +49,12 @@ public class LoggerCatThread extends Thread {
 
             String line;
             while (!isInterrupted() && (line = bufferedReader.readLine()) != null) {
-                if (line.contains(processID)) {
-                    LoggerModel.getLoggerModels().add(new LoggerModel().setLogcatMessage(line));
-                    LoggerDisplay.notifyLogChanged();
+                if (line.contains(ProcessID)) {
+                    LoggerModel model = new LoggerModel().setLogcatMessage(line);
+                    if (model.getTagWithContent().contains(getTag())) {
+                        LoggerModel.getLoggerModels().add(model);
+                        LoggerDisplay.notifyLogChanged();
+                    }
                 }
             }
 

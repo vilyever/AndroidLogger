@@ -42,6 +42,10 @@ public class LoggerDisplay implements Application.ActivityLifecycleCallbacks {
             loggerDisplayView.notifyLogChanged();
         }
     }
+
+    public static void setDisplayLogTag(String tag) {
+        getInstance().getLoggerCatThread().setTag(tag);
+    }
     
     /* Properties */
     private Application application;
