@@ -49,13 +49,10 @@ public class LoggerCatThread extends Thread {
 
             String line;
             while (!isInterrupted() && (line = bufferedReader.readLine()) != null) {
-                if (line.contains(ProcessID)) {
+                if (line.contains(ProcessID) && line.contains(getTag())) {
                     LoggerModel model = new LoggerModel().setLogcatMessage(line);
-                    int tagIndex = model.getTagWithContent().indexOf(getTag());
-                    if (tagIndex >=0 && tagIndex <= getTag().length()) {
-                        LoggerModel.getLoggerModels().add(model);
-                        LoggerDisplay.notifyLogChanged();
-                    }
+                    LoggerModel.getLoggerModels().add(model);
+                    LoggerDisplay.notifyLogChanged();
                 }
             }
 

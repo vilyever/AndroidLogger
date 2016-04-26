@@ -137,13 +137,30 @@ public class LoggerDisplayView extends FrameLayout implements View.OnLayoutChang
                 return true;
             }
         });
+
+        addView(getBottomButton());
+        getBottomButton().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                self.getLoggerRecyclerView().smoothScrollToPosition(self.getLoggerDisplayItemAdapter().getItemCount() - 1);
+            }
+        });
     }
 
     public void notifyLogChanged() {
         getLoggerRecyclerView().post(new Runnable() {
             @Override
             public void run() {
+                boolean shouldAutoScrollToBottom = false;
+                if (self.getLoggerRecyclerView().computeVerticalScrollOffset() >= self.getLoggerRecyclerView().computeVerticalScrollRange() - self.getLoggerRecyclerView().getHeight()) {
+                    shouldAutoScrollToBottom = true;
+                }
+
                 self.getLoggerRecyclerView().getAdapter().notifyDataSetChanged();
+
+                if (shouldAutoScrollToBottom) {
+                    self.getLoggerRecyclerView().scrollToPosition(self.getLoggerDisplayItemAdapter().getItemCount() - 1);
+                }
             }
         });
     }
@@ -172,12 +189,15 @@ public class LoggerDisplayView extends FrameLayout implements View.OnLayoutChang
                 public void run() {
                     int margin = self.getContext().getResources().getDimensionPixelSize(R.dimen.loggerDisplayButtonMargin);
                     self.getLoggerButton().setX(margin);
-                    self.getLoggerButton().setY(self.getHeight() - margin - getLoggerButton().getHeight());
+                    self.getLoggerButton().setY(self.getHeight() - margin - self.getLoggerButton().getHeight());
 
-                    FrameLayout.LayoutParams layoutParams = (LayoutParams) getLoggerRecyclerView().getLayoutParams();
+                    self.getBottomButton().setX(self.getWidth() - margin - self.getBottomButton().getWidth());
+                    self.getBottomButton().setY(self.getHeight() - margin - self.getBottomButton().getHeight());
+
+                    FrameLayout.LayoutParams layoutParams = (LayoutParams) self.getLoggerRecyclerView().getLayoutParams();
                     layoutParams.height = self.getHeight() / 3;
                     layoutParams.topMargin = self.getHeight() - layoutParams.height;
-                    getLoggerRecyclerView().setLayoutParams(layoutParams);
+                    self.getLoggerRecyclerView().setLayoutParams(layoutParams);
                 }
             });
         }
@@ -214,6 +234,17 @@ public class LoggerDisplayView extends FrameLayout implements View.OnLayoutChang
             this.loggerButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1E90FF")));
         }
         return this.loggerButton;
+    }
+
+    private FloatingActionButton bottomButton;
+    protected FloatingActionButton getBottomButton() {
+        if (this.bottomButton == null) {
+            this.bottomButton = new FloatingActionButton(getContext());
+            this.bottomButton.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            this.bottomButton.setImageResource(android.R.drawable.arrow_down_float);
+            this.bottomButton.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+        }
+        return this.bottomButton;
     }
 
     private LoggerDisplayItemAdapter loggerDisplayItemAdapter;
