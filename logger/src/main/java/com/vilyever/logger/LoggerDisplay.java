@@ -57,12 +57,14 @@ public class LoggerDisplay implements Application.ActivityLifecycleCallbacks {
     protected LoggerDisplay setResumedActivity(Activity resumedActivity) {
         this.resumedActivity = resumedActivity;
 
-        if (this.resumedActivity != null && !getLoggerCatThread().isAlive()) {
-            getLoggerCatThread().start();
-        }
-        else {
-            getLoggerCatThread().interrupt();
-            this.loggerCatThread = null;
+        if (Logger.isDebugging()) {
+            if (this.resumedActivity != null && !getLoggerCatThread().isAlive()) {
+                getLoggerCatThread().start();
+            }
+            else {
+                getLoggerCatThread().interrupt();
+                this.loggerCatThread = null;
+            }
         }
 
         return this;
@@ -115,12 +117,14 @@ public class LoggerDisplay implements Application.ActivityLifecycleCallbacks {
     public void onActivityResumed(Activity activity) {
         setResumedActivity(activity);
 
-        if (!getLoggerDisplayViewHashMap().containsKey(activity)) {
-            LoggerDisplayView loggerDisplayView = new LoggerDisplayView(activity);
-            getLoggerDisplayViewHashMap().put(activity, loggerDisplayView);
-        }
+        if (Logger.isDebugging()) {
+            if (!getLoggerDisplayViewHashMap().containsKey(activity)) {
+                LoggerDisplayView loggerDisplayView = new LoggerDisplayView(activity);
+                getLoggerDisplayViewHashMap().put(activity, loggerDisplayView);
+            }
 
-        getLoggerDisplayViewHashMap().get(activity).attachToActivity();
+            getLoggerDisplayViewHashMap().get(activity).attachToActivity();
+        }
     }
 
     @Override
@@ -129,8 +133,10 @@ public class LoggerDisplay implements Application.ActivityLifecycleCallbacks {
             setResumedActivity(null);
         }
 
-        if (getLoggerDisplayViewHashMap().containsKey(activity)) {
-            getLoggerDisplayViewHashMap().get(activity).detachFromActivity();
+        if (Logger.isDebugging()) {
+            if (getLoggerDisplayViewHashMap().containsKey(activity)) {
+                getLoggerDisplayViewHashMap().get(activity).detachFromActivity();
+            }
         }
     }
 
