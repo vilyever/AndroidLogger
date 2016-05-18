@@ -17,7 +17,7 @@ Step 2. Add the dependency in the form
 
 ```gradle
 dependencies {
-  compile 'com.github.vilyever:AndroidLogger:1.0.5'
+  compile 'com.github.vilyever:AndroidLogger:1.0.6'
 }
 ```
 
@@ -29,6 +29,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         LoggerDisplay.initialize(this); // 初始化，然后每个Activity都会显示log按钮
+        LoggerDisplay.setDisplayLogTag("test"); // 设置只显示某tag
     }
 }
 
