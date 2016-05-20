@@ -83,9 +83,10 @@ public class Logger {
         return msg;
     }
 
-    // TODO: 2016/4/11 remove all \r
     private static void logLongMsg(String tag, String msg, boolean isFirstParagraph) {
         if (isDebugging()) {
+
+            msg = msg.replaceAll("\r", "");
 
             String subMsg = msg;
             if (msg.length() > LogMaxLength) {
