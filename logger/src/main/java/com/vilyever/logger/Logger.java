@@ -90,17 +90,17 @@ public class Logger {
             if (msg.length() > LogMaxLength) {
                 int cutIndex = LogMaxLength;
 
-                subMsg = msg.substring(0, LogMaxLength);
+                subMsg = new String(msg.substring(0, LogMaxLength));
 
                 int lastLineBreakIndex = subMsg.lastIndexOf("\n");
                 if (LogMaxLength - lastLineBreakIndex < 256) {
-                    subMsg = msg.substring(0, lastLineBreakIndex);
+                    subMsg = new String(msg.substring(0, lastLineBreakIndex));
                     cutIndex = lastLineBreakIndex + 1;
                 }
 
                 subMsg = subMsg.replaceAll("\r", "");
                 Log.d(tag, subMsg);
-                logLongMsg(tag, msg.substring(cutIndex), false);
+                logLongMsg(tag, new String(msg.substring(cutIndex)), false);
             }
             else {
                 Log.d(tag, subMsg);
