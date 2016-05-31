@@ -86,8 +86,6 @@ public class Logger {
     private static void logLongMsg(String tag, String msg, boolean isFirstParagraph) {
         if (isDebugging()) {
 
-            msg = msg.replaceAll("\r", "");
-
             String subMsg = msg;
             if (msg.length() > LogMaxLength) {
                 int cutIndex = LogMaxLength;
@@ -100,6 +98,7 @@ public class Logger {
                     cutIndex = lastLineBreakIndex + 1;
                 }
 
+                subMsg = subMsg.replaceAll("\r", "");
                 Log.d(tag, subMsg);
                 logLongMsg(tag, msg.substring(cutIndex), false);
             }
